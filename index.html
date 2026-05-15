@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日勇氣抽籤</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      color: #3f352c;
+      background:
+        radial-gradient(circle at top left, rgba(255, 238, 188, 0.9), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(190, 235, 216, 0.8), transparent 36%),
+        linear-gradient(135deg, #fff7e8 0%, #fff0f3 48%, #eefaf1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+    }
+
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 20px rgba(91, 73, 58, 0.08);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 7vw, 56px);
+      letter-spacing: 0.04em;
+    }
+
+    .subtitle {
+      margin: 14px 0 28px;
+      color: #6f6258;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      box-shadow: 0 22px 60px rgba(92, 73, 55, 0.16);
+      padding: clamp(22px, 5vw, 42px);
+      backdrop-filter: blur(10px);
+    }
+
+    .fortune-box {
+      position: relative;
+      min-height: 310px;
+      border-radius: 26px;
+      border: 1px solid #f6dfb9;
+      background: linear-gradient(135deg, #ffffff 0%, #fff8ea 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 38px 26px;
+      overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute;
+      right: 28px;
+      top: 24px;
+      font-size: 34px;
+      animation: float 3.6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(9deg) scale(1.08);
+      }
+    }
+
+    .icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #fce4e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+
+    #fortuneTitle {
+      margin: 0 0 16px;
+      font-size: clamp(26px, 5vw, 36px);
+    }
+
+    #fortuneText {
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: clamp(18px, 3.8vw, 23px);
+      line-height: 1.9;
+      color: #5a4b42;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.45s ease both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    button {
+      margin-top: 28px;
+      border: 0;
+      border-radius: 999px;
+      padding: 16px 30px;
+      background: #84634e;
+      color: #fffaf2;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(132, 99, 78, 0.24);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #725341;
+      box-shadow: 0 15px 30px rgba(132, 99, 78, 0.28);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .hint {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      background: rgba(236, 249, 239, 0.86);
+      border: 1px solid #d5efda;
+      color: #41664b;
+      line-height: 1.8;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 16px;
+      }
+
+      .card {
+        border-radius: 26px;
+      }
+
+      .fortune-box {
+        min-height: 330px;
+        padding: 34px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <div class="date-pill">
+      🌿 <span id="todayLabel"></span>
+    </div>
+
+    <h1>每日勇氣抽籤</h1>
+
+    <p class="subtitle">
+      輕輕點一下，收下今天送給自己的心靈提醒。
+    </p>
+
+    <section class="card">
+      <div class="fortune-box">
+        <div class="sparkle">✨</div>
+
+        <div id="fortuneContent" class="fade-in">
+          <div class="icon">✨</div>
+          <h2 id="fortuneTitle">今天想收到什麼提醒呢？</h2>
+          <p id="fortuneText">
+            也許是一句安慰，也許是一點勇氣，也許是提醒你：你已經很努力了。
+          </p>
+        </div>
+      </div>
+
+      <button id="drawButton" type="button">
+        開始抽籤 ↻
+      </button>
+
+      <div class="hint" id="dailyHint"></div>
+    </section>
+  </main>
+
+  <script>
+    const fortunes = [
+      {
+        title: "相信自己的步伐",
+        text: "你不需要立刻成為很厲害的人，只要願意每天往前一點點，就已經走在成長的路上。"
+      },
+      {
+        title: "溫柔也是力量",
+        text: "真正的勇敢，不一定是大聲衝出去；有時候，是你明明很累，仍然選擇好好照顧自己。"
+      },
+      {
+        title: "你正在發光",
+        text: "不要因為暫時看不見成果，就懷疑自己的努力。種子在破土之前，也曾安靜地在黑暗裡生長。"
+      },
+      {
+        title: "把心收回來",
+        text: "今天把注意力放回自己身上。你的感受值得被尊重，你的界線也值得被守護。"
+      },
+      {
+        title: "慢慢來也可以",
+        text: "人生不是比誰走得快，而是學會在每一步裡更靠近真實的自己。慢一點，並不代表你落後。"
+      },
+      {
+        title: "你比想像中堅強",
+        text: "那些你以為撐不過去的日子，你其實都走過來了。請相信，這一次你也會找到自己的路。"
+      },
+      {
+        title: "允許自己重新開始",
+        text: "今天不是昨天的延續，而是一個新的入口。你可以調整方向，也可以重新選擇對自己更好的生活。"
+      },
+      {
+        title: "心會帶你回家",
+        text: "當你不知道該往哪裡走時，先安靜下來聽聽自己的心。真正重要的答案，常常藏在溫柔的直覺裡。"
+      },
+      {
+        title: "別急著否定自己",
+        text: "你正在學習，也正在變得更清楚。每一次不完美，都是生命教你更認識自己的方式。"
+      },
+      {
+        title: "把勇氣放進今天",
+        text: "今天只需要完成一件讓你更靠近自己的事。勇氣不是沒有害怕，而是帶著害怕仍願意前進。"
+      },
+      {
+        title: "你值得被善待",
+        text: "不要把別人的冷漠，誤認為自己的不值得。你本來就值得被理解、被珍惜、被溫柔對待。"
+      },
+      {
+        title: "生命會慢慢展開",
+        text: "有些事情不會立刻有答案，但你可以先穩住自己。當心安定下來，路也會慢慢清楚。"
+      },
+      {
+        title: "今天先站穩",
+        text: "不用急著解決所有問題。先讓自己呼吸、吃飯、睡覺，穩住了，力量就會慢慢回來。"
+      },
+      {
+        title: "你可以保護自己",
+        text: "善良不代表要無限忍耐。真正成熟的愛，也包含清楚表達界線，並且守護自己的心。"
+      },
+      {
+        title: "你的感受有意義",
+        text: "那些讓你不舒服的感覺，不是麻煩，而是內在正在提醒你：有些事情需要被看見。"
+      }
+    ];
+
+    const todayLabel = new Intl.DateTimeFormat("zh-TW", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long"
+    }).format(new Date());
+
+    document.getElementById("todayLabel").textContent = todayLabel;
+
+    const day = new Date().getDate();
+    const dailyHint = fortunes[day % fortunes.length];
+
+    document.getElementById("dailyHint").textContent =
+      "今日小提醒：" + dailyHint.text;
+
+    let currentTitle = "";
+
+    function drawFortune() {
+      let next = fortunes[Math.floor(Math.random() * fortunes.length)];
+
+      while (next.title === currentTitle && fortunes.length > 1) {
+        next = fortunes[Math.floor(Math.random() * fortunes.length)];
+      }
+
+      currentTitle = next.title;
+
+      const content = document.getElementById("fortuneContent");
+      const title = document.getElementById("fortuneTitle");
+      const text = document.getElementById("fortuneText");
+      const button = document.getElementById("drawButton");
+
+      content.classList.remove("fade-in");
+
+      // 這行是為了讓動畫每次抽籤都重新播放
+      void content.offsetWidth;
+
+      title.textContent = next.title;
+      text.textContent = next.text;
+      button.textContent = "再抽一支籤 ↻";
+
+      content.classList.add("fade-in");
+    }
+
+    document
+      .getElementById("drawButton")
+      .addEventListener("click", drawFortune);
+  </script>
+</body>
+</html>
